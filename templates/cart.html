@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if cart_items %}
+    <h2>Your Cart</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>
+                    <img src="{{ MEDIA_URL }}{{ item.product.product_img.url }}" alt="{{ item.product.product_name }}" class="img-thumbnail" width="100">
+                    {{ item.product.product_name }}
+                </td>
+                <td>{{ item.product.product_price }} INR</td>
+                <td>
+                    <a href="{% url 'decrease_quantity' item.id %}" class="btn btn-sm btn-secondary">-</a>
+                    {{ item.quantity }}
+                    <a href="{% url 'add_to_cart' item.product.id %}" class="btn btn-sm btn-primary">+</a>
+                </td>
+                <td>{{ item.sub_total }} INR</td>
+                <td><a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger" onclick='return confirm("Are you sure to remove this product?")'>Remove</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="row justify-content-end">
+        <div class="col-4">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td>Total:</td>
+                        <td>{{ total_price }} INR</td>
+                    </tr>
+                    <tr>
+                        <td>Tax (10%):</td>
+                        <td>{{ tax }} INR</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Overall Total:</strong></td>
+                        <td><strong>{{ overall_total }} INR</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <a href="{% url 'pharmacy' %}" class="btn btn-primary btn-lg">Back to store</a>
+        </div>
+    </div>
+    {% else %}
+    <h2>Your Cart is Empty</h2>
+    <a href="{% url 'pharmacy' %}" class="btn btn-primary btn-lg">Back to store</a>
+    {% endif %}
+</div>
+{% endblock %}
